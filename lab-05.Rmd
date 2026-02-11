@@ -48,7 +48,6 @@ pair <- nrow(lq_ak) * nrow(dn_ak)
 dn_lq_ak <- full_join(dn_ak, lq_ak,
   by = "state"
 )
-dn_lq_ak
 ```
 
 ### Exercise 4
@@ -96,7 +95,7 @@ dn_lq_ak <- dn_lq_ak %>%
 ### Exercise 7
 
 ```{r min_dist}
-dn_lq_ak_min_dist <- dn_lq_ak %>% 
+dn_lq_ak_min_dist <- dn_lq_ak %>%
   group_by(address.x) %>% 
   summarise(min_dist = min(distance))
 ```
@@ -130,3 +129,168 @@ dn_lq_ak_min_dist %>%
   theme(plot.title.position = "plot")
 ```
 
+### Exercise 9
+
+The distance between the Denny's in North Carolina and the closest La Quinta locations range from 1.779 km to 187.935 km. The average distance is 65.44 km, and the median is 53.46 km.
+
+```{r visual_NC}
+dn_nc <- dennys %>%
+  filter(state == "NC")
+lq_nc <- laquinta %>%
+  filter(state == "NC")
+
+dn_lq_nc <- full_join(dn_nc, lq_nc,
+  by = "state"
+)
+
+dn_lq_nc <- dn_lq_nc %>% 
+  mutate(
+    distance = haversine(
+      longitude.x,
+      latitude.x,
+      longitude.y,
+      latitude.y
+    )
+  )
+
+dn_lq_nc_min_dist <- dn_lq_nc %>%
+  group_by(address.x) %>% 
+  summarise(min_dist = min(distance))
+
+dn_lq_nc_min_dist %>% 
+  ggplot(
+    aes(
+      y = min_dist,
+      x = reorder(address.x, min_dist)
+    )
+  ) +
+  geom_bar(fill = "#fdbb84", stat = "identity") +
+  labs(
+    title = "Distance between each Denny's and the closest La Quinta to it in North Carolina",
+    y = "Distance (km)",
+    x = "Address of Denny's"
+  ) +
+  theme_minimal() +
+  theme(plot.title.position = "plot",
+        axis.text.x = element_text(
+          angle = 45,
+          hjust = 1,
+          size = 8
+        ))
+```
+
+```{r descrip_stat_NC}
+max(dn_lq_nc_min_dist$min_dist)
+min(dn_lq_nc_min_dist$min_dist)
+mean(dn_lq_nc_min_dist$min_dist)
+median(dn_lq_nc_min_dist$min_dist)
+```
+
+### Exercise 9
+
+The distance between Denny's in Texas and their closest La Quinta locations range from 0.016 km to 60.582 km. The average distance is 5.79 km, and the median is 3.37 km. Since there's too many Denny's locations in Texas, it is very hard to show the address of all the individual locations.
+
+```{r visual_TX}
+dn_tx <- dennys %>%
+  filter(state == "TX")
+lq_tx <- laquinta %>%
+  filter(state == "TX")
+
+dn_lq_tx <- full_join(dn_tx, lq_tx,
+  by = "state"
+)
+
+dn_lq_tx <- dn_lq_tx %>% 
+  mutate(
+    distance = haversine(
+      longitude.x,
+      latitude.x,
+      longitude.y,
+      latitude.y
+    )
+  )
+
+dn_lq_tx_min_dist <- dn_lq_tx %>%
+  group_by(address.x) %>% 
+  summarise(min_dist = min(distance))
+
+dn_lq_tx_min_dist %>% 
+  ggplot(
+    aes(
+      y = min_dist,
+      x = reorder(address.x, min_dist)
+    )
+  ) +
+  geom_bar(fill = "#e34a33", stat = "identity") +
+  labs(
+    title = "Distance between each Denny's and the closest La Quinta to it in Texas",
+    y = "Distance (km)",
+    x = "Address of Denny's"
+  ) +
+  theme_minimal() +
+  theme(plot.title.position = "plot",
+        axis.text.x = element_text(
+          angle = 90,
+          hjust = 1,
+          size = 3
+        ))
+```
+
+```{r descrip_stat_TX}
+max(dn_lq_tx_min_dist$min_dist)
+min(dn_lq_tx_min_dist$min_dist)
+mean(dn_lq_tx_min_dist$min_dist)
+median(dn_lq_tx_min_dist$min_dist)
+```
+
+### Exercise 10
+
+```{r visual_MI}
+dn_mi <- dennys %>%
+  filter(state == "MI")
+lq_mi <- laquinta %>%
+  filter(state == "MI")
+
+dn_lq_mi <- full_join(dn_mi, lq_mi,
+  by = "state"
+)
+
+dn_lq_mi <- dn_lq_mi %>% 
+  mutate(
+    distance = haversine(
+      longitude.x,
+      latitude.x,
+      longitude.y,
+      latitude.y
+    )
+  )
+
+dn_lq_mi_min_dist <- dn_lq_mi %>%
+  group_by(address.x) %>% 
+  summarise(min_dist = min(distance))
+
+dn_lq_mi_min_dist %>% 
+  ggplot(
+    aes(
+      y = min_dist,
+      x = reorder(address.x, min_dist)
+    )
+  ) +
+  geom_bar(fill = "#9ecae1", stat = "identity") +
+  labs(
+    title = "Distance between each Denny's and the closest La Quinta to it in Michigan",
+    y = "Distance (km)",
+    x = "Address of Denny's"
+  ) +
+  theme_minimal() +
+  theme(plot.title.position = "plot",
+        axis.text.x = element_text(
+          angle = 45,
+          hjust = 1,
+          size = 8
+        ))
+```
+
+### Exercise 12
+
+Among the states I examined, Mitch Hedberg's joke is most likely to hold true in Texas. The vast majority of the Denny's have its closest La Quinta locations within 10 km, while the other states have a greater average minimun distance when comparing with Taxes.
