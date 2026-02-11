@@ -44,11 +44,21 @@ pair <- nrow(lq_ak) * nrow(dn_ak)
 
 ### Exercise 3
 
-...
+```{r join_sets}
+dn_lq_ak <- full_join(dn_ak, lq_ak,
+  by = "state"
+)
+dn_lq_ak
+```
 
 ### Exercise 4
 
-...
+There are six observations in the joined dn_lq_ak data frame. The variables are the address, city, zip, longitude, and latitude of both Denny's and La Quinta and the state, which is Alaska.
+
+```{r abt_merged_set}
+dim(dn_lq_ak)
+colnames(dn_lq_ak)
+```
 
 ### Exercise 5
 
