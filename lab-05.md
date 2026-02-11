@@ -96,10 +96,92 @@ colnames(dn_lq_ak)
 
 ### Exercise 5
 
-…
+To add a new variable to a data frame while keeping the existing
+variables, I will use the mutate() function from the tidyverse.
 
 ### Exercise 6
 
-…
+``` r
+haversine <- function(long1, lat1, long2, lat2, round = 3) {
+  # convert to radians
+  long1 <- long1 * pi / 180
+  lat1 <- lat1 * pi / 180
+  long2 <- long2 * pi / 180
+  lat2 <- lat2 * pi / 180
 
-Add exercise headings as needed.
+  R <- 6371 # Earth mean radius in km
+
+  a <- sin((lat2 - lat1) / 2)^2 + cos(lat1) * cos(lat2) * sin((long2 - long1) / 2)^2
+  d <- R * 2 * asin(sqrt(a))
+
+  return(round(d, round)) # distance in km
+}
+
+dn_lq_ak <- dn_lq_ak %>% 
+  mutate(
+    distance = haversine(
+      longitude.x,
+      latitude.x,
+      longitude.y,
+      latitude.y
+    )
+  )
+```
+
+### Exercise 7
+
+``` r
+dn_lq_ak_min_dist <- dn_lq_ak %>% 
+  group_by(address.x) %>% 
+  summarise(min_dist = min(distance))
+```
+
+### Exercise 8
+
+The distances between Denny’s and the nearest La Quinta locations in
+Alaska range from 2.035 to 5.998 kilometers. The mean of the distance is
+4.41 km, and the median is 5.197 km.
+
+``` r
+max(dn_lq_ak_min_dist$min_dist)
+```
+
+    ## [1] 5.998
+
+``` r
+min(dn_lq_ak_min_dist$min_dist)
+```
+
+    ## [1] 2.035
+
+``` r
+mean(dn_lq_ak_min_dist$min_dist)
+```
+
+    ## [1] 4.41
+
+``` r
+median(dn_lq_ak_min_dist$min_dist)
+```
+
+    ## [1] 5.197
+
+``` r
+dn_lq_ak_min_dist %>% 
+  ggplot(
+    aes(
+      x = min_dist,
+      y = reorder(address.x, min_dist)
+    )
+  ) +
+  geom_bar(fill = "#99d8c9", stat = "identity") +
+  labs(
+    title = "Distance between each Denny's and the closest La Quinta to it in Alaska",
+    x = "Distance (km)",
+    y = "Address of Denny's"
+  ) +
+  theme_minimal() +
+  theme(plot.title.position = "plot")
+```
+
+![](lab-05_files/figure-gfm/visual_dist-1.png)<!-- -->
