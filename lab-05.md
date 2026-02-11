@@ -16,9 +16,25 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here. Add code
-chunks as needed. Don’t forget to label your code chunk. Do not use
-spaces in code chunk labels.
+There are three Denny’s locations in Alaska.
+
+``` r
+dn_ak <- dennys %>%
+  filter(state == "AK")
+nrow(dn_ak)
+```
+
+    ## [1] 3
+
+There are two La Quinta locations in Alaska.
+
+``` r
+lq_ak <- laquinta %>%
+  filter(state == "AK")
+nrow(lq_ak)
+```
+
+    ## [1] 2
 
 ### Exercise 2
 
